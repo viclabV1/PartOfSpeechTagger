@@ -20,6 +20,12 @@ testFileArg = sys.argv[3]
 # learned. 
 trainingFile = open(trainingFileArg)
 
+###
+###
+###MAIN FUNCTIONS
+###
+###
+
 ##
 ##TRAINING FUNCTION
 ##
@@ -53,18 +59,43 @@ def training():
         sortedKeys = list(sortedWordDict.keys())
         mostFrequentTagDict[word]=sortedKeys[0]
     #if occurences less than N, remove. do this for both positive and negative models
-    print(mostFrequentTagDict)
+    #print(mostFrequentTagDict)
     return mostFrequentTagDict
 
+##
+##TEST FUNCTION
+##
+def test(freqDict):
+    #Without rules
+    thisTag = ""
+    for word in testFile.readlines():
+        thisWord = word.strip() 
+        if thisWord in freqDict:
+            thisTag = freqDict[thisWord]
+        else: 
+            thisTag = "NN"
+        print(thisWord+"/"+thisTag)
+
+##
+##
+##SUPPORT FUNCTIONS
+##
+##
 #Function to split word and tag
 def splitWordAndTag(wordAndTag):
     #only slash we care about will always be the last one
     wordTagList = wordAndTag[::-1].split("/")
-    return wordTagList[1][::-1], re.sub(r"\n", r"", wordTagList[0][::-1])
+    return "".join(wordTagList[1:])[::-1], re.sub(r"\n", r"", wordTagList[0][::-1])
     
-training()
+##
+##
+##EXECUTION
+##
+##
+freqDict = training()
 trainingFile.close()
+#print(freqDict)
 #Now we open the test file, and call the test function
 testFile = open(testFileArg)
-test()
+test(freqDict)
 testFile.close

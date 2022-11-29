@@ -98,4 +98,4 @@ trainingFile.close()
 #Now we open the test file, and call the test function
 testFile = open(testFileArg)
 test(freqDict)
-testFile.close
+testFile.close()

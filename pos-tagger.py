@@ -74,7 +74,10 @@ def test(freqDict):
         if thisWord in freqDict:
             thisTag = freqDict[thisWord]
         else: 
-            thisTag = "NN"
+            if mode == "0":
+                thisTag = "NN"
+            else:
+                thisTag = unknownAssign(thisWord)
         print(thisWord+"/"+thisTag)
 
 ##
@@ -82,6 +85,34 @@ def test(freqDict):
 ##SUPPORT FUNCTIONS
 ##
 ##
+
+#Function with rules to handle unknowns
+def unknownAssign(word):
+    #First rules will look at suffixes
+    #Rule 1: ends with -ed -> "VBN"
+    if re.match(r".*ed$", word):
+        tag = "VBN"
+        return tag
+    #Rule 2: ends with -ly -> "RB"
+    if re.match(r".*ly$", word):
+        tag = "RB"
+        return tag
+    #Rule 3: ends with -s -> "NNS"
+    if re.match(r".*s$", word):
+        tag = "NNS"
+        return tag
+    #Rule 4: If number -> "CD"
+    if re.match(r"[0-9]+", word):
+        tag = "CD"
+        return tag
+    #Rule 5: If ends with -ing -> "VBG"
+    if re.match(r".*ing$", word):
+        tag = "VBG"
+        return tag
+    tag = "NN"
+    return tag
+
+
 #Function to split word and tag
 def splitWordAndTag(wordAndTag):
     #only slash we care about will always be the last one

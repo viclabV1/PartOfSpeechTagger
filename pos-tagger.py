@@ -72,8 +72,14 @@ def test(freqDict):
     for word in testFile.readlines():
         thisWord = word.strip()
         if thisWord in freqDict:
-            thisTag = freqDict[thisWord]
-        else: 
+            if mode=="0":
+                thisTag = freqDict[thisWord]
+            else:
+                thisTag = knownError(thisWord)
+                if thisTag == "NVM!!":
+                    thisTag = freqDict[thisWord]
+        else:
+            #print(word) 
             if mode == "0":
                 thisTag = "NN"
             else:
@@ -85,6 +91,17 @@ def test(freqDict):
 ##SUPPORT FUNCTIONS
 ##
 ##
+
+#Function with rules to handle some known word errors
+def knownError(word):
+    #Rule 1: One of the more commmon mismatches is past-tense and past-participle
+
+    #Rule 2
+    #Rule 3
+    #Rule 4
+    #Rule 5
+    return "NVM!!"
+
 
 #Function with rules to handle unknowns
 def unknownAssign(word):
@@ -108,6 +125,10 @@ def unknownAssign(word):
     #Rule 5: If ends with -ing -> "VBG"
     if re.match(r".*ing$", word):
         tag = "VBG"
+        return tag
+    #Rule 6: If it starts with a capital its probably a proper noun
+    if re.match(r"^[A-Z]", word):
+        tag = "NNP"
         return tag
     tag = "NN"
     return tag

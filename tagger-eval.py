@@ -25,8 +25,34 @@ for line in keyFile.readlines():
     word, tag = "".join(wordTagList[1:])[::-1], re.sub(r"\n", r"", wordTagList[0][::-1])
     keyDict[word]=tag
 
-print(testDict, keyDict)
+#Use another dict to keep track of comparisons
+#Format: {tuple(predictTag,keyTag): count}
+comparisonDict = {}
+for word in testDict:
+    thisTuple = (testDict[word], keyDict[word])
+    if thisTuple in comparisonDict:
+        comparisonDict[thisTuple] += 1
+    else:
+        comparisonDict[thisTuple] = 1
 
+#Sort in ascending order of predicted tags then key tags
+sortedCompDict = {}
+sortedKeys = sorted(comparisonDict.keys())
+for key in sortedKeys:
+    sortedCompDict[key]=comparisonDict[key]
+
+#Confusion matrix
+correctPredictions = 0
+totalPredictions = 0
+for item in sortedCompDict:
+    totalPredictions += sortedCompDict[item]
+    if item[0]==item[1]:
+        print(item, sortedCompDict[item])
+        correctPredictions += sortedCompDict[item]
+    
+    #print(item[0] + "\t" + item[1] + ":\t" + str(sortedCompDict[item]))
+print(correctPredictions)
+print("Accuracy:\t" + str(correctPredictions/totalPredictions))
 
 # #accuracy
 # accuracy = (truePositives+trueNegatives)/(trueNegatives+truePositives+falseNegatives+falsePositives)

@@ -60,6 +60,7 @@ def training():
         mostFrequentTagDict[word]=sortedKeys[0]
     #if occurences less than N, remove. do this for both positive and negative models
     #print(mostFrequentTagDict)
+    #print(wordTagDict["No"])
     return mostFrequentTagDict
 
 ##
@@ -69,7 +70,7 @@ def test(freqDict):
     #Without rules
     thisTag = ""
     for word in testFile.readlines():
-        thisWord = word.strip() 
+        thisWord = word.strip()
         if thisWord in freqDict:
             thisTag = freqDict[thisWord]
         else: 

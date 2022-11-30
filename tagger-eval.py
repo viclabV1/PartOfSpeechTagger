@@ -15,16 +15,20 @@ keyFile = open(keyFileArg)
 #Construct dicts for both files
 testDict = {}
 keyDict = {}
+testList = []
+keyList = []
 for line in testFile.readlines():
+    testList.append(line)
     wordTagList = line[::-1].split("/")
     word, tag = "".join(wordTagList[1:])[::-1], re.sub(r"\n", r"", wordTagList[0][::-1])
     testDict[word]=tag
 testFile.close()
 for line in keyFile.readlines():
+    keyList.append(line)
     wordTagList = line[::-1].split("/")
     word, tag = "".join(wordTagList[1:])[::-1], re.sub(r"\n", r"", wordTagList[0][::-1])
     keyDict[word]=tag
-
+keyFile.close()
 #Use another dict to keep track of comparisons
 #Format: {tuple(predictTag,keyTag): count}
 comparisonDict = {}
@@ -40,23 +44,12 @@ sortedCompDict = {}
 sortedKeys = sorted(comparisonDict.keys())
 for key in sortedKeys:
     sortedCompDict[key]=comparisonDict[key]
-
 #Confusion matrix
-correctPredictions = 0
-totalPredictions = 0
 for item in sortedCompDict:
-    totalPredictions += sortedCompDict[item]
-    if item[0]==item[1]:
-        print(item, sortedCompDict[item])
-        correctPredictions += sortedCompDict[item]
-    
-    #print(item[0] + "\t" + item[1] + ":\t" + str(sortedCompDict[item]))
-print(correctPredictions)
-print("Accuracy:\t" + str(correctPredictions/totalPredictions))
-
-# #accuracy
-# accuracy = (truePositives+trueNegatives)/(trueNegatives+truePositives+falseNegatives+falsePositives)
-# #precision
-# precision = truePositives/(truePositives+falsePositives)
-# #recall
-# recall = truePositives/(truePositives+falseNegatives)
+    print(item[0] + "\t" + item[1] + ":\t" + str(sortedCompDict[item]))
+#finally print accuracy by just comparing lines
+correct = 0
+for i in range(0,len(testList)):
+    if testList[i]==keyList[i]:
+        correct += 1
+print("Accuracy:\t" + str(correct/len(testList)))
